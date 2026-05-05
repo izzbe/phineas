@@ -1,0 +1,19 @@
+header:
+  permno:           permno
+  permco:           permco
+  cusip:            cusip
+  issuernm:         issuer_name
+  securitynm:       security_name
+  ticker:           ticker
+  secinfostartdt:   info_valid_start
+  secinfoenddt:     info_valid_end
+  securitybegdt:    security_start
+  securityenddt:    security_end
+  securitytype:     security_type
+  securitysubtype:  security_subtype
+  shareclass:       share_class
+  primaryexch:      primary_exchange
+  tradingstatusflg: trading_status
+  siccd:            SIC_code
+  naics:            naics
+  usincflg:         us_incorporation

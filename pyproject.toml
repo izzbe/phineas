@@ -13,3 +13,9 @@ members = [
     "apps/*",
     "libraries/*",
 ]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "jupyterlab>=4.5.7",
+]
