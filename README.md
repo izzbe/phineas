@@ -24,7 +24,7 @@ Just describe your strategy in plain English. No code, no configuration.
 
 ![Phineas Agent Running](photos/phineas-agent-running.png)
 
-The agent writes and executes Python code in real time. You can watch it reason through the implementation, hit errors, and self-correct — all streamed live.
+The agent writes and executes Python code in real time. You can watch it reason through the implementation, hit errors, and self-correct
 
 **4. Results**
 
