@@ -1,4 +1,7 @@
 import os
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).parents[4]
 
 dsn = (f'postgresql://'
        f'{os.environ["POSTGRES_USER"]}'

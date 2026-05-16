@@ -1,0 +1,77 @@
+{
+    "count": 110227992,
+    "next": "https://wrds-api.wharton.upenn.edu/data/crsp.stkdlycumulativeadjfactor/?limit=10&offset=10",
+    "previous": null,
+    "results": [
+        {
+            "dlycaldt": "1986-01-07",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-08",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-09",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-10",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-13",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-14",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-15",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-16",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-17",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        },
+        {
+            "dlycaldt": "1986-01-20",
+            "dlycumfacpr": "1.000000000000",
+            "dlycumfacshr": "1.000000000000",
+            "dlyshrout": "3680",
+            "permno": 10000
+        }
+    ]
+}

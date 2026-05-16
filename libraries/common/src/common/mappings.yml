@@ -1,19 +1,137 @@
 header:
-  permno:           permno
-  permco:           permco
-  cusip:            cusip
-  issuernm:         issuer_name
-  securitynm:       security_name
-  ticker:           ticker
-  secinfostartdt:   info_valid_start
-  secinfoenddt:     info_valid_end
-  securitybegdt:    security_start
-  securityenddt:    security_end
-  securitytype:     security_type
-  securitysubtype:  security_subtype
-  shareclass:       share_class
-  primaryexch:      primary_exchange
-  tradingstatusflg: trading_status
-  siccd:            SIC_code
-  naics:            naics
-  usincflg:         us_incorporation
+  url: "/data/crsp.stksecurityinfohdr/"
+  schema:
+    permno:           permno
+    permco:           permco
+    cusip:            cusip
+    issuernm:         issuer_name
+    securitynm:       security_name
+    ticker:           ticker
+    secinfostartdt:   info_valid_start
+    secinfoenddt:     info_valid_end
+    securitybegdt:    security_start
+    securityenddt:    security_end
+    securitytype:     security_type
+    securitysubtype:  security_subtype
+    shareclass:       share_class
+    primaryexch:      primary_exchange
+    tradingstatusflg: trading_status
+    siccd:            SIC_code
+    naics:            naics
+    usincflg:         us_incorporation
+
+bars:
+  url: "/data/crsp.stkdlysecuritydata/"
+  schema:
+    dlycaldt: date
+    dlyopen: open
+    dlyhigh: high
+    dlylow: low
+    dlyprc: close
+    dlyvol: vol
+    dlycap: market_cap
+    dlyprcvol: price_x_volume
+    dlyret: daily_return
+    dlyretx: daily_return_wo_distribution
+    permno: permno
+
+adjustment:
+  url: "/data/crsp.stkdlycumulativeadjfactor/"
+  schema:
+    permno: permno
+    dlycaldt: date
+    dlyshrout: shares_outstanding
+    dlycumfacpr: price_adjustment
+    dlycumfacshr: volume_adjustment
+
+link:
+  url: "/data/crsp.ccmxpf_lnkhist/"
+  schema:
+    gvkey: gvkey
+    linkdt: link_start_date
+    linkenddt: link_end_date
+    linkprim: link_primary
+    linktype: link_type
+    lpermco: permco
+    lpermno: permno
+
+fundamentals_quarterly:
+  url: "/data/comp.fundq/"
+  schema:
+    gvkey: gvkey
+    datadate: datadate
+    rdq: rdq
+    fyearq: fyearq
+    fqtr: fqtr
+    fyr: fyr
+    datacqtr: datacqtr
+    datafqtr: datafqtr
+    indfmt: indfmt
+    consol: consol
+    popsrc: popsrc
+    datafmt: datafmt
+    conm: conm
+    tic: tic
+    cusip: cusip
+    cik: cik
+    curcdq: curcdq
+    fic: fic
+    costat: costat
+    exchg: exchg
+    ajexq: ajexq
+    saleq: saleq
+    revtq: revtq
+    cogsq: cogsq
+    xsgaq: xsgaq
+    xrdq: xrdq
+    xintq: xintq
+    xoprq: xoprq
+    oibdpq: oibdpq
+    oiadpq: oiadpq
+    dpq: dpq
+    nopiq: nopiq
+    piq: piq
+    txtq: txtq
+    ibq: ibq
+    ibcomq: ibcomq
+    niq: niq
+    xiq: xiq
+    spiq: spiq
+    epsfxq: epsfxq
+    epspxq: epspxq
+    epsfiq: epsfiq
+    epspiq: epspiq
+    atq: atq
+    ltq: ltq
+    seqq: seqq
+    ceqq: ceqq
+    cheq: cheq
+    actq: actq
+    lctq: lctq
+    invtq: invtq
+    rectq: rectq
+    apq: apq
+    ppentq: ppentq
+    ppegtq: ppegtq
+    intanq: intanq
+    gdwlq: gdwlq
+    dlcq: dlcq
+    dlttq: dlttq
+    dd1q: dd1q
+    pstkq: pstkq
+    txditcq: txditcq
+    req: req
+    icaptq: icaptq
+    mibq: mibq
+    oancfy: oancfy
+    capxy: capxy
+    dvy: dvy
+    sstky: sstky
+    prstkcy: prstkcy
+    dltisy: dltisy
+    dltry: dltry
+    cshoq: cshoq
+    cshprq: cshprq
+    cshfdq: cshfdq
+    prccq: prccq
+    mkvaltq: mkvaltq

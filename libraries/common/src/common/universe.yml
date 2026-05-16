@@ -1,3 +1,6 @@
-permno:
-  - 14593 # AAPL
-  -
+universe:
+
+params:
+  dlycaldt__gte: "1990-01-01"
+  limit: 100000
+  offset: 0

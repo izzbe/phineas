@@ -1,0 +1,107 @@
+{
+    "count": 123388,
+    "next": "https://wrds-api.wharton.upenn.edu/data/crsp.ccmxpf_lnkhist/?limit=10&offset=10",
+    "previous": null,
+    "results": [
+        {
+            "gvkey": "001000",
+            "liid": "00X",
+            "linkdt": "1961-01-01",
+            "linkenddt": "1970-09-29",
+            "linkprim": "C",
+            "linktype": "NU",
+            "lpermco": null,
+            "lpermno": null
+        },
+        {
+            "gvkey": "001000",
+            "liid": "01",
+            "linkdt": "1970-09-30",
+            "linkenddt": "1970-11-12",
+            "linkprim": "P",
+            "linktype": "NU",
+            "lpermco": null,
+            "lpermno": null
+        },
+        {
+            "gvkey": "001000",
+            "liid": "01",
+            "linkdt": "1970-11-13",
+            "linkenddt": "1978-06-30",
+            "linkprim": "P",
+            "linktype": "LU",
+            "lpermco": 23369.0,
+            "lpermno": 25881.0
+        },
+        {
+            "gvkey": "001001",
+            "liid": "00X",
+            "linkdt": "1978-01-01",
+            "linkenddt": "1983-09-19",
+            "linkprim": "C",
+            "linktype": "NU",
+            "lpermco": null,
+            "lpermno": null
+        },
+        {
+            "gvkey": "001001",
+            "liid": "01",
+            "linkdt": "1983-09-20",
+            "linkenddt": "1986-07-31",
+            "linkprim": "P",
+            "linktype": "LU",
+            "lpermco": 6398.0,
+            "lpermno": 10015.0
+        },
+        {
+            "gvkey": "001002",
+            "liid": "00X",
+            "linkdt": "1960-01-01",
+            "linkenddt": "1970-09-29",
+            "linkprim": "C",
+            "linktype": "NR",
+            "lpermco": null,
+            "lpermno": null
+        },
+        {
+            "gvkey": "001002",
+            "liid": "01",
+            "linkdt": "1970-09-30",
+            "linkenddt": "1972-12-13",
+            "linkprim": "C",
+            "linktype": "NR",
+            "lpermco": null,
+            "lpermno": null
+        },
+        {
+            "gvkey": "001002",
+            "liid": "01",
+            "linkdt": "1973-06-06",
+            "linkenddt": "1973-08-31",
+            "linkprim": "C",
+            "linktype": "NR",
+            "lpermco": null,
+            "lpermno": null
+        },
+        {
+            "gvkey": "001002",
+            "liid": "01",
+            "linkdt": "1972-12-14",
+            "linkenddt": "1973-06-05",
+            "linkprim": "C",
+            "linktype": "LC",
+            "lpermco": 22159.0,
+            "lpermno": 10023.0
+        },
+        {
+            "gvkey": "001003",
+            "liid": "00X",
+            "linkdt": "1980-01-01",
+            "linkenddt": "1983-12-06",
+            "linkprim": "C",
+            "linktype": "NU",
+            "lpermco": null,
+            "lpermno": null
+        }
+    ]
+}

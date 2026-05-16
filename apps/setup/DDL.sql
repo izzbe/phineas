@@ -15,7 +15,7 @@ CREATE TABLE bars
     daily_return_wo_distribution DOUBLE PRECISION,
     market_cap             DOUBLE PRECISION,
     price_x_volume         DOUBLE PRECISION,
-    delisting_flag         BOOLEAN,
+    delisting_flag         TEXT,
     data_source            TEXT        NOT NULL DEFAULT 'crsp',
     ingested_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (permno, date)
@@ -58,7 +58,7 @@ CREATE TABLE header
     primary_exchange TEXT,
     trading_status   TEXT,
     SIC_code         INTEGER,
-    naics            INTEGER,
+    naics            TEXT,
     us_incorporation TEXT,
     ingested_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -69,8 +69,8 @@ CREATE TABLE fundamentals_quarterly
     gvkey       TEXT        NOT NULL,
     datadate    DATE        NOT NULL, -- fiscal period end
     rdq         DATE,                 -- report announcement date (nullable pre-1971)
-    fyearq      SMALLINT    NOT NULL,
-    fqtr        SMALLINT    NOT NULL,
+    fyearq      SMALLINT,
+    fqtr        SMALLINT,
     fyr         SMALLINT,             -- fiscal year-end month
     datacqtr    TEXT,                 -- e.g. '1966Q4' (calendar)
     datafqtr    TEXT,                 -- e.g. '1966Q4' (fiscal)
@@ -180,8 +180,7 @@ CREATE TABLE link
     link_primary    TEXT,
     link_type       TEXT,
     permco          INTEGER,
-    permno          INTEGER,
-    PRIMARY KEY (gvkey, permno, link_start_date)
+    permno          INTEGER
 );
 
 

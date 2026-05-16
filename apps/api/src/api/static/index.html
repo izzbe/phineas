@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHINEAS</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      background: #fff;
+      color: #000;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    header {
+      background: #000;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 8px;
+    }
+
+    nav { display: flex; }
+
+    nav a {
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      height: 48px;
+      color: #999;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: 3px;
+      border-left: 1px solid #222;
+      transition: none;
+    }
+
+    nav a:hover { color: #fff; }
+    nav a.active { color: #fff; background: #111; }
+
+    /* ── Layout ─────────────────────────────────────────────── */
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 28px 80px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ── Form ───────────────────────────────────────────────── */
+    .field-label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #999;
+      margin-bottom: 7px;
+    }
+
+    textarea, input[type="date"], input[type="number"] {
+      font-family: inherit;
+      font-size: 13px;
+      border: 1px solid #000;
+      padding: 10px 12px;
+      width: 100%;
+      background: #fff;
+      color: #000;
+      outline: none;
+      border-radius: 0;
+      appearance: none;
+    }
+
+    textarea { resize: vertical; min-height: 110px; }
+    textarea:focus, input:focus { background: #fafafa; }
+
+    .params-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 16px;
+      margin-top: 16px;
+      align-items: end;
+    }
+
+    button#run-btn {
+      font-family: inherit;
+      font-size: 10px;
+      letter-spacing: 4px;
+      background: #000;
+      color: #fff;
+      border: 1px solid #000;
+      padding: 11px 28px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button#run-btn:hover { background: #222; }
+    button#run-btn:disabled { background: #aaa; border-color: #aaa; cursor: not-allowed; }
+
+    /* ── Divider ─────────────────────────────────────────────── */
+    hr {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 36px 0;
+    }
+
+    /* ── Status ──────────────────────────────────────────────── */
+    #status-bar {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    /* ── Agent log ───────────────────────────────────────────── */
+    details { margin-bottom: 28px; }
+
+    details summary {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #999;
+      cursor: pointer;
+      user-select: none;
+      padding: 10px 0;
+      border-top: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+      list-style: none;
+    }
+
+    details summary::before { content: '▶  '; font-size: 8px; }
+    details[open] summary::before { content: '▼  '; }
+    details summary::-webkit-details-marker { display: none; }
+
+    #agent-log {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-top: none;
+      padding: 18px 20px;
+      max-height: 380px;
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    .log-thinking {
+      color: #444;
+      margin-bottom: 14px;
+      white-space: pre-wrap;
+    }
+
+    .log-code {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-left: 3px solid #000;
+      padding: 10px 14px;
+      margin: 8px 0;
+      white-space: pre;
+      overflow-x: auto;
+      font-size: 11px;
+      color: #000;
+    }
+
+    .log-output {
+      font-size: 11px;
+      color: #555;
+      padding: 2px 0 10px 0;
+      white-space: pre-wrap;
+    }
+
+    .log-stderr { color: #999; }
+
+    .log-status {
+      font-size: 10px;
+      color: #bbb;
+      letter-spacing: 1px;
+      margin: 4px 0;
+    }
+
+    /* ── Section labels ──────────────────────────────────────── */
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: #999;
+      border-top: 1px solid #000;
+      padding-top: 24px;
+      margin-bottom: 20px;
+      margin-top: 8px;
+    }
+
+    /* ── Metrics grid ────────────────────────────────────────── */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border: 1px solid #000;
+      margin-bottom: 40px;
+    }
+
+    .metric-cell {
+      padding: 18px 16px;
+      border-right: 1px solid #000;
+    }
+
+    .metric-cell:last-child { border-right: none; }
+
+    .metric-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: #999;
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Charts ──────────────────────────────────────────────── */
+    .chart-wrap {
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+      margin-bottom: 36px;
+    }
+
+    /* ── History ─────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr { border-bottom: 2px solid #000; }
+
+    th {
+      text-align: left;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #999;
+      padding: 10px 14px;
+      font-weight: normal;
+    }
+
+    td {
+      padding: 14px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: middle;
+    }
+
+    tbody tr:hover td { background: #f9f9f9; cursor: pointer; }
+
+    .strategy-cell {
+      max-width: 380px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #333;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 72px 0;
+      color: #ccc;
+      font-size: 11px;
+      letter-spacing: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">PHINEAS</span>
+  <nav>
+    <a href="#" id="nav-backtest" class="active" onclick="showView('backtest'); return false;">BACKTEST</a>
+    <a href="#" id="nav-history" onclick="showView('history'); return false;">HISTORY</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ── BACKTEST VIEW ─────────────────────────────────────────── -->
+  <div id="view-backtest" class="view active">
+
+    <form id="backtest-form">
+      <div class="field-label">STRATEGY</div>
+      <textarea id="strategy" placeholder="Describe your trading strategy in plain English.&#10;&#10;Example: Each month, rank all stocks by their 12-1 month return and go long the top decile, equal-weighted."></textarea>
+
+      <div class="params-row">
+        <div>
+          <div class="field-label">START DATE</div>
+          <input type="date" id="start-date" value="2010-01-01">
+        </div>
+        <div>
+          <div class="field-label">END DATE</div>
+          <input type="date" id="end-date" value="2023-12-31">
+        </div>
+        <div>
+          <div class="field-label">INITIAL CAPITAL ($)</div>
+          <input type="number" id="capital" value="1000000">
+        </div>
+        <div>
+          <div class="field-label">&nbsp;</div>
+          <button type="submit" id="run-btn">RUN ▶</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="results" style="display:none">
+      <hr>
+      <div id="status-bar"></div>
+
+      <details id="log-details">
+        <summary>AGENT LOG</summary>
+        <div id="agent-log"></div>
+      </details>
+
+      <div id="metrics-section" style="display:none">
+        <div class="section-label">PERFORMANCE</div>
+        <div class="metrics-grid" id="metrics-grid"></div>
+
+        <div class="section-label">EQUITY CURVE</div>
+        <div class="chart-wrap">
+          <canvas id="equity-chart" height="90"></canvas>
+        </div>
+
+        <div class="section-label">DRAWDOWN</div>
+        <div class="chart-wrap">
+          <canvas id="drawdown-chart" height="45"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HISTORY VIEW ──────────────────────────────────────────── -->
+  <div id="view-history" class="view">
+    <table>
+      <thead>
+        <tr>
+          <th>DATE</th>
+          <th>STRATEGY</th>
+          <th>TOTAL RETURN</th>
+          <th>ANN. RETURN</th>
+          <th>SHARPE</th>
+          <th>MAX DD</th>
+          <th>PERIOD</th>
+        </tr>
+      </thead>
+      <tbody id="history-body"></tbody>
+    </table>
+    <div id="history-empty" class="empty" style="display:none">NO BACKTESTS YET</div>
+  </div>
+
+</main>
+
+<script>
+let equityChart = null;
+let drawdownChart = null;
+
+// ── View switching ──────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  if (name === 'history') renderHistory();
+}
+
+// ── Form ────────────────────────────────────────────────────────
+document.getElementById('backtest-form').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const strategy = document.getElementById('strategy').value.trim();
+  if (!strategy) return;
+
+  const req = {
+    strategy,
+    start_date: document.getElementById('start-date').value,
+    end_date:   document.getElementById('end-date').value,
+    initial_capital: parseFloat(document.getElementById('capital').value),
+  };
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('metrics-section').style.display = 'none';
+  document.getElementById('agent-log').innerHTML = '';
+  document.getElementById('log-details').open = true;
+  document.getElementById('run-btn').disabled = true;
+  setStatus('SUBMITTING...');
+
+  let jobId;
+  try {
+    const res = await fetch('/backtest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req),
+    });
+    jobId = (await res.json()).job_id;
+  } catch (err) {
+    setStatus('ERROR: ' + err.message);
+    document.getElementById('run-btn').disabled = false;
+    return;
+  }
+
+  setStatus('RUNNING · ' + jobId.slice(0, 8));
+  stream(jobId, req);
+});
+
+// ── SSE stream ──────────────────────────────────────────────────
+function stream(jobId, req) {
+  const src = new EventSource(`/backtest/${jobId}/stream`);
+  const log = document.getElementById('agent-log');
+
+  const append = el => { log.appendChild(el); log.scrollTop = log.scrollHeight; };
+
+  src.addEventListener('thinking', e => {
+    const el = document.createElement('div');
+    el.className = 'log-thinking';
+    el.textContent = JSON.parse(e.data).content;
+    append(el);
+  });
+
+  src.addEventListener('code', e => {
+    const el = document.createElement('pre');
+    el.className = 'log-code';
+    el.textContent = JSON.parse(e.data).content;
+    append(el);
+  });
+
+  src.addEventListener('executing', () => {
+    const el = document.createElement('div');
+    el.className = 'log-status';
+    el.textContent = '▶ executing...';
+    append(el);
+  });
+
+  src.addEventListener('code_output', e => {
+    const { stdout, stderr } = JSON.parse(e.data);
+    if (stdout) {
+      const el = document.createElement('pre');
+      el.className = 'log-output';
+      el.textContent = stdout;
+      append(el);
+    }
+    if (stderr) {
+      const el = document.createElement('pre');
+      el.className = 'log-output log-stderr';
+      el.textContent = stderr;
+      append(el);
+    }
+  });
+
+  src.addEventListener('done', async () => {
+    src.close();
+    setStatus('FETCHING RESULT...');
+    const job = await (await fetch(`/backtest/${jobId}`)).json();
+    if (job.result) {
+      renderResults(job.result);
+      saveHistory(req, job.result);
+      setStatus('COMPLETE');
+      document.getElementById('log-details').open = false;
+    } else {
+      setStatus('COMPLETE — no structured result');
+    }
+    document.getElementById('run-btn').disabled = false;
+  });
+
+  src.addEventListener('agent_error', e => {
+    src.close();
+    setStatus('AGENT ERROR: ' + JSON.parse(e.data).content);
+    document.getElementById('run-btn').disabled = false;
+  });
+
+  src.addEventListener('stream_end', () => src.close());
+
+  src.onerror = () => {
+    src.close();
+    setStatus('STREAM CONNECTION ERROR');
+    document.getElementById('run-btn').disabled = false;
+  };
+}
+
+// ── Results ─────────────────────────────────────────────────────
+function renderResults(result) {
+  document.getElementById('metrics-section').style.display = 'block';
+  renderMetrics(result.metrics || {});
+  if (result.equity_curve && Object.keys(result.equity_curve).length > 0) {
+    renderCharts(result.equity_curve);
+  }
+}
+
+function renderMetrics(m) {
+  const grid = document.getElementById('metrics-grid');
+  grid.innerHTML = '';
+
+  const items = [
+    ['TOTAL RETURN',  'total_return',          v => pct(v)],
+    ['ANN. RETURN',   'annualized_return',      v => pct(v)],
+    ['VOLATILITY',    'annualized_volatility',  v => pct(v, false)],
+    ['SHARPE',        'sharpe_ratio',           v => v.toFixed(2)],
+    ['MAX DD',        'max_drawdown',           v => pct(v)],
+    ['CALMAR',        'calmar_ratio',           v => isFinite(v) ? v.toFixed(2) : '∞'],
+    ['PERIOD',        'n_years',               v => v.toFixed(1) + 'y'],
+  ];
+
+  for (const [label, key, fmt] of items) {
+    if (!(key in m)) continue;
+    const cell = document.createElement('div');
+    cell.className = 'metric-cell';
+    cell.innerHTML = `<div class="metric-label">${label}</div><div class="metric-value">${fmt(m[key])}</div>`;
+    grid.appendChild(cell);
+  }
+}
+
+function pct(v, sign = true) {
+  const s = sign && v >= 0 ? '+' : '';
+  return s + (v * 100).toFixed(2) + '%';
+}
+
+function renderCharts(curve) {
+  const entries = Object.entries(curve).sort(([a], [b]) => a.localeCompare(b));
+  const labels  = entries.map(([d]) => d);
+  const values  = entries.map(([, v]) => +v);
+
+  let peak = values[0];
+  const dd = values.map(v => { peak = Math.max(peak, v); return ((v - peak) / peak) * 100; });
+
+  const scaleBase = {
+    grid:   { color: '#f0f0f0' },
+    border: { color: '#000' },
+    ticks:  { font: { family: "'IBM Plex Mono', monospace", size: 10 }, color: '#999', maxTicksLimit: 10 },
+  };
+
+  if (equityChart)   equityChart.destroy();
+  if (drawdownChart) drawdownChart.destroy();
+
+  equityChart = new Chart(document.getElementById('equity-chart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        borderColor: '#000',
+        borderWidth: 1.5,
+        pointRadius: 0,
+        tension: 0,
+      }],
+    },
+    options: {
+      animation: false,
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: { label: ctx => '$' + Math.round(ctx.parsed.y).toLocaleString() },
+        },
+      },
+      scales: {
+        x: { ...scaleBase },
+        y: {
+          ...scaleBase,
+          ticks: { ...scaleBase.ticks, callback: v => '$' + (v / 1000).toFixed(0) + 'k' },
+        },
+      },
+    },
+  });
+
+  drawdownChart = new Chart(document.getElementById('drawdown-chart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: dd,
+        borderColor: '#000',
+        borderWidth: 1,
+        pointRadius: 0,
+        tension: 0,
+        fill: { target: 'origin', below: 'rgba(0,0,0,0.07)' },
+      }],
+    },
+    options: {
+      animation: false,
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          mode: 'index', intersect: false,
+          callbacks: { label: ctx => ctx.parsed.y.toFixed(2) + '%' },
+        },
+      },
+      scales: {
+        x: { ...scaleBase },
+        y: { ...scaleBase, ticks: { ...scaleBase.ticks, callback: v => v.toFixed(1) + '%' } },
+      },
+    },
+  });
+}
+
+// ── History ─────────────────────────────────────────────────────
+function saveHistory(req, result) {
+  const history = loadHistory();
+  history.unshift({ ts: new Date().toISOString(), req, result });
+  try { localStorage.setItem('phineas_history', JSON.stringify(history.slice(0, 50))); } catch {}
+}
+
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem('phineas_history') || '[]'); } catch { return []; }
+}
+
+function renderHistory() {
+  const history = loadHistory();
+  const body  = document.getElementById('history-body');
+  const empty = document.getElementById('history-empty');
+  body.innerHTML = '';
+
+  if (!history.length) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  history.forEach(entry => {
+    const m  = entry.result?.metrics || {};
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${new Date(entry.ts).toLocaleString()}</td>
+      <td class="strategy-cell">${entry.req.strategy}</td>
+      <td>${m.total_return        != null ? pct(m.total_return)                    : '—'}</td>
+      <td>${m.annualized_return   != null ? pct(m.annualized_return)               : '—'}</td>
+      <td>${m.sharpe_ratio        != null ? m.sharpe_ratio.toFixed(2)              : '—'}</td>
+      <td>${m.max_drawdown        != null ? pct(m.max_drawdown)                    : '—'}</td>
+      <td>${entry.req.start_date} – ${entry.req.end_date}</td>
+    `;
+    tr.onclick = () => {
+      document.getElementById('strategy').value         = entry.req.strategy;
+      document.getElementById('start-date').value       = entry.req.start_date;
+      document.getElementById('end-date').value         = entry.req.end_date;
+      document.getElementById('capital').value          = entry.req.initial_capital;
+      document.getElementById('results').style.display  = 'block';
+      document.getElementById('agent-log').innerHTML    = '';
+      showView('backtest');
+      renderResults(entry.result);
+      setStatus('LOADED FROM HISTORY · ' + new Date(entry.ts).toLocaleString());
+    };
+    body.appendChild(tr);
+  });
+}
+
+// ── Helpers ─────────────────────────────────────────────────────
+function setStatus(msg) {
+  document.getElementById('status-bar').textContent = msg;
+}
+</script>
+
+</body>
+</html>
